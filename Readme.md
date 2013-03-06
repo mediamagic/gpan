@@ -23,16 +23,17 @@ var gp = require("gpan")
 	, tmpDir = '/path/to/tmp/dir'
 
 //all settings are optional and default to the shown values
-gp.init({ zoom_level:0						//panorama zoom level, default 0
-				,	tiles_prefix:'image_'   //tile image prefix, useful for montage
-				,	path_to_image:'panos'		//panorama will create this folder and store the panorama in it
-				,	output_prefix:'output_'	//prefix for the panorama image
-				, tmp_dir: 'gpan_tmp'			//temp folder prefix
-				, pub: true								// path_to_image relative to app root or public folder
-				})
+gp.init({ zoom_level:0				//panorama zoom level, default 0
+		,	tiles_prefix:'image_'   //tile image prefix, useful for montage
+		,	path_to_image:'panos'	//panorama will create this folder and store the panorama in it
+		,	output_prefix:'output_'	//prefix for the panorama image
+		, tmp_dir: 'gpan_tmp'		//temp folder prefix
+		, pub: true					// path_to_image relative to app root or public folder
+		})
 //each setting can be changed after init
 gp.set('zoom_level', 3);
 
+//retrieve panorama image for Times Square, New York
 gp.savePanorama('3q57BxQpP8dNzwD0R5PIzg', tmpDir, function(err,path){
 	if(err)
 		return handleError(err);
