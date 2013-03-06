@@ -12,7 +12,7 @@ var http 			= require('http')
 									}
 
 
-exports.version = '1.1.00';
+exports.version = '1.1.1';
 
 exports.init = function(obj){
 	for (var i in obj)

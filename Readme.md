@@ -2,6 +2,9 @@
 
 Download high resolution Google Streetview panorama images and stitch them together into a large panorama image
 
+## Version
+`1.1.1`
+
 ## Installation
 
 `npm install gpan`
