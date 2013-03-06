@@ -8,8 +8,18 @@
         "type": "git",
         "url": "https://github.com/mediamagic/gpan.git"
     },
+    "bugs": {
+        "url":"https://github.com/mediamagic/gpan/issues",
+        "email":"info@mediamagic.co.il"
+    },
     "dependencies": {
     },
+    "licenses": [
+       {
+        "type":"GNU GPL",
+        "url":"http://www.gnu.org/licenses/"
+       }
+    ],
     "engines": { 
         "node": "*" 
     }
