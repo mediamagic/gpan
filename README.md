@@ -37,11 +37,11 @@ var gp = require("gpan")
 
 //all settings are optional and default to the shown values
 gp.config({ zoom_level:0				//panorama zoom level, default 0
-		, tiles_prefix:'image_'		//tile image prefix, useful for montage
-		, path_to_image:'panos'		//panorama will create this folder and store the panorama in it
-		, output_prefix:'output_'	//prefix for the panorama image
-		, tmp_dir: 'gpan_tmp'		//temp folder prefix
-		, pub: true					// path_to_image relative to app root or public folder
+		, tiles_prefix:'image_'			//tile image prefix, useful for montage
+		, path_to_image:'panos'			//panorama will create this folder and store the panorama in it
+		, output_prefix:'output_'		//prefix for the panorama image
+		, tmp_dir_prefix: 'gpan_tmp'	//temp folder prefix
+		, pub: true						// path_to_image relative to app root or public folder
 		})
 
 //each setting can be changed separately
