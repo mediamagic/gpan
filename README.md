@@ -3,7 +3,7 @@
 Download high resolution Google Streetview panorama images and stitch them together into a large panorama image
 
 ## Version
-`1.1.1`
+`1.2.0`
 
 ## Installation
 
@@ -19,28 +19,42 @@ from the separate image files downloaded via google api
 This application makes use of an onducumented Google Maps API. While you may access them, there is no
 guarantee that this API will not change in the future revisions to Google Maps.
 
+## Changes
+
+* Changes in 1.2.0
+    * `init()` and `set()` have merged into a single method `.config()`
+    * `savePanorama()` now accepts a single pano_id or an array of pano_id's
+    * gpan will now handle temporary files internally
+    * gpan now depends on the `node-temp` library
+* Fixes in 1.2.0
+    * google cbk(x) api call are made to random numbers (0-4) to spread load
+    * errors on google cbk calls will bubble up.
+
 ## Example usage
 
 ```js
 var gp = require("gpan")
-	, tmpDir = '/path/to/tmp/dir'
 
 //all settings are optional and default to the shown values
-gp.init({ zoom_level:0				//panorama zoom level, default 0
+gp.config({ zoom_level:0				//panorama zoom level, default 0
 		, tiles_prefix:'image_'		//tile image prefix, useful for montage
 		, path_to_image:'panos'		//panorama will create this folder and store the panorama in it
 		, output_prefix:'output_'	//prefix for the panorama image
 		, tmp_dir: 'gpan_tmp'		//temp folder prefix
 		, pub: true					// path_to_image relative to app root or public folder
 		})
-//each setting can be changed after init
-gp.set('zoom_level', 3);
+
+//each setting can be changed separately
+gp.config('zoom_level', 3);
+
+//each setting value can be returned
+var zoom = gp.config('zoom_level') // returns 3
 
 //retrieve panorama image for Times Square, New York
-gp.savePanorama('3q57BxQpP8dNzwD0R5PIzg', tmpDir, function(err,path){
+gp.savePanorama('3q57BxQpP8dNzwD0R5PIzg', function(err,path){
 	if(err)
 		return handleError(err);
-	console.log(path); //will return the path where the panorama montage is stored
+	console.log(path); //will return the full path to the panorama image
 });
 ```
 

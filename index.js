@@ -1,32 +1,64 @@
-var http 			= require('http')
-	,	fs 				= require('fs')
-	,	exec 			= require('child_process').exec
-	, path 			= require('path')
+var http 		= require('http')
+	, fs 		= require('fs')
+	, exec	 	= require('child_process').exec
+	, path 		= require('path')
 	, homeRoot 	= process.cwd() + '/'
-	, settings 	= 	{	zoom_level:0
-									,	tiles_prefix:'image_'
-									,	path_to_image:'panos'
-									,	output_prefix:'output_'
-									, tmp_dir: 'gpan_tmp'
-									, pub: true
-									}
+	, temp 		= require('temp')
+	, settings 	= 	{ zoom_level:0
+					, tiles_prefix:'image_'
+					, path_to_image:'panos'
+					, output_prefix:'output_'
+					, tmp_dir_prefix: 'gpan_tmp'
+					, pub: true
+					, api_retry: 3
+					, api_timeout: 5000
+					}
 
 
-exports.version = '1.1.1';
+exports.version = '1.2.0';
 
-exports.init = function(obj){
-	for (var i in obj)
-		settings[i] = obj[i];
+exports.config = function(key, value){
+	if(typeof(key) != 'string' && typeof(key) == 'object'){
+		for (var i in obj)
+			settings[i] = obj[i];
+	} else if (typeof(key) == 'string' && value != null && value !='function') {
+		settings[key] = value;
+	} else {
+		return settings[key];
+	}
 }
-exports.set = function(key, value){
-	settings[key] = value;
+
+exports.savePanorama = function(panos, cb) {
+	if(typeof(panos) === 'array'){
+		for(var i=0;i<panos.length;i++){
+			temp.mkdir(settings.tmp_dir_prefix, function(err, path){
+				if (err)
+					return cb(err);
+				_savePanorama(panos[i], path, function(err, imagePath){
+					if (err)
+						return cb(err);
+					return cb(null, imagePath);
+				})
+			})
+		}
+	} else {
+		temp.mkdir(settings.tmp_dir_prefix, function(err, path){
+			if (err)
+				return cb(err);
+			_savePanorama(panos, path, function(err,imagePath){
+				if (err)
+					return cb(err);
+				return cb(null, imagePath);
+			})
+		})
+	}
 }
 
-exports.savePanorama = function(panoId, tmp_dir, cb) {
+var _savePanorama = function(panoId, tmp_dir, cb) {
 	var panoramaRule 		= getPanoramaZoom(settings.zoom_level)
-		, currentImageNum = 0
-		, pub 						= (settings.pub) ? '/public/' : '/' 
-		, imagePath				= global.root + pub + settings.path_to_image +'/'
+		, currentImageNum	= 0
+		, pub 				= (settings.pub) ? '/public/' : '/' 
+		, imagePath			= global.root + pub + settings.path_to_image +'/'
 
 	if (typeof(tmp_dir) === 'function') {
 		var tmpDir = settings.tmp_dir;
@@ -37,15 +69,15 @@ exports.savePanorama = function(panoId, tmp_dir, cb) {
 	for(var y =0; y <= panoramaRule.y; y++) {
 		for(var x =0; x <= panoramaRule.x; x++) {
 			currentImageNum++;
-			saveTile(panoId, x, y, padNumber(currentImageNum, 3), tmpDir, function(err, _x, _y) {
+			saveTile(panoId, x, y, padNumber(currentImageNum, 5), tmpDir, function(err, _x, _y) {
 				if (err)
 					return cb(err);
 				if(_x == panoramaRule.x && _y == panoramaRule.y) {
 					var command = 'montage '
-											+ tmpDir + '/' + settings.tiles_prefix + '*.jpg -tile '
-											+ (panoramaRule.x + 1) + 'x' + (panoramaRule.y + 1)
-											+ ' -geometry 512x512 -quality 100 '
-											+ imagePath +settings.output_prefix	+ panoId + '.jpg';
+								+ tmpDir + '/' + settings.tiles_prefix + '*.jpg -tile '
+								+ (panoramaRule.x + 1) + 'x' + (panoramaRule.y + 1)
+								+ ' -geometry 512x512 -quality 100 '
+								+ imagePath +settings.output_prefix	+ panoId + '.jpg';
 					ensureDir(imagePath, function(e){
 						if (err)
 							return cb(err, null);
@@ -60,13 +92,14 @@ exports.savePanorama = function(panoId, tmp_dir, cb) {
 }
 
 var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
-	var options = {	host: 'cbk0.google.com'
-								,	port: 80
-								,	path: '/cbk?output=tile&zoom='
-									+ settings.zoom_level
-									+ '&x=' + x + '&y=' + y
-									+ '&panoid=' + panoId
-								}
+	var random		=	Math.floor(Math.random()*4)
+		, options 	=	{ host: 'cbk0.google.com'
+						, port: 80
+						, path: '/cbk?output=tile&zoom='
+						+ settings.zoom_level
+						+ '&x=' + x + '&y=' + y
+						+ '&panoid=' + panoId
+						}
 	http.get(options, function(resp){
 		var image = '';
 		resp.setEncoding('binary');
@@ -81,8 +114,10 @@ var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
 				cb(null, x, y);
 			});
 		});
-	}).on("error", function(e){
-		console.log("Got error: " + e.message);
+	}).on("error", function(err){
+		//TODO: retry x times
+		//TODO: handle timeout error
+		return cb(err);
 	});
 }
 
