@@ -13,7 +13,7 @@
         "email":"info@mediamagic.co.il"
     },
     "dependencies": {
-        "temp":"1.2.x"
+        "temp":"0.5.x"
     },
     "licenses": [
        {
