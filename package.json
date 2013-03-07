@@ -1,6 +1,6 @@
 {
     "name": "gpan",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Node.js module to download hi-res streetview panoramas",
     "author": "mediamagic israel",
     "keywords": ["panorama", "streetview", "google"],
