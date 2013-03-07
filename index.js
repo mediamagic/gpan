@@ -8,14 +8,14 @@ var http 		= require('http')
 					, tiles_prefix:'image_'
 					, path_to_image:'panos'
 					, output_prefix:'output_'
-					, tmp_dir_prefix: 'gpan_tmp'
+					, tmp_dir_prefix: 'gpan_tmp_'
 					, pub: true
 					, api_retry: 3
 					, api_timeout: 5000
 					}
 
 
-exports.version = '1.2.0';
+exports.version = '1.2.1';
 
 exports.config = function(key, value){
 	if(typeof(key) != 'string' && typeof(key) == 'object'){
@@ -31,7 +31,7 @@ exports.config = function(key, value){
 exports.savePanorama = function(panos, cb) {
 	if(typeof(panos) === 'array'){
 		for(var i=0;i<panos.length;i++){
-			temp.mkdir(settings.tmp_dir_prefix, function(err, path){
+			temp.mkdir(settings.tmp_dir_prefix + panos[i], function(err, path){
 				if (err)
 					return cb(err);
 				_savePanorama(panos[i], path, function(err, imagePath){
@@ -42,7 +42,7 @@ exports.savePanorama = function(panos, cb) {
 			})
 		}
 	} else {
-		temp.mkdir(settings.tmp_dir_prefix, function(err, path){
+		temp.mkdir(settings.tmp_dir_prefix + panos, function(err, path){
 			if (err)
 				return cb(err);
 			_savePanorama(panos, path, function(err,imagePath){
@@ -57,8 +57,10 @@ exports.savePanorama = function(panos, cb) {
 var _savePanorama = function(panoId, tmp_dir, cb) {
 	var panoramaRule 		= getPanoramaZoom(settings.zoom_level)
 		, currentImageNum	= 0
+		, downloaded		= 0
 		, pub 				= (settings.pub) ? '/public/' : '/' 
 		, imagePath			= global.root + pub + settings.path_to_image +'/'
+		, totalTiles		= (panoramaRule.x +1) * (panoramaRule.y+1);
 
 	if (typeof(tmp_dir) === 'function') {
 		var tmpDir = settings.tmp_dir;
@@ -70,9 +72,10 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 		for(var x =0; x <= panoramaRule.x; x++) {
 			currentImageNum++;
 			saveTile(panoId, x, y, padNumber(currentImageNum, 5), tmpDir, function(err, _x, _y) {
+				downloaded++;
 				if (err)
 					return cb(err);
-				if(_x == panoramaRule.x && _y == panoramaRule.y) {
+				if(downloaded == totalTiles) {
 					var command = 'montage '
 								+ tmpDir + '/' + settings.tiles_prefix + '*.jpg -tile '
 								+ (panoramaRule.x + 1) + 'x' + (panoramaRule.y + 1)
@@ -111,7 +114,10 @@ var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
 			fs.writeFile(inputPath, image, 'binary', function(err){
 				if (err) 
 					return cb(err, null, null)
-				cb(null, x, y);
+				//setTimeout(function(){
+					cb(null, x, y);	
+				//}, 1000);
+				
 			});
 		});
 	}).on("error", function(err){
