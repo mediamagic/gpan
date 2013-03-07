@@ -3,7 +3,7 @@
 Download high resolution Google Streetview panorama images and stitch them together into a large panorama image
 
 ## Version
-`1.2.0`
+`1.2.1`
 
 ## Installation
 
@@ -20,7 +20,8 @@ This application makes use of an onducumented Google Maps API. While you may acc
 guarantee that this API will not change in the future revisions to Google Maps.
 
 ## Changes
-
+* Changes in 1.2.1
+	* fixed an issue where the montage would try to build the montage before all tiles were downloaded
 * Changes in 1.2.0
     * `init()` and `set()` have merged into a single method `.config()`
     * `savePanorama()` now accepts a single pano_id or an array of pano_id's
