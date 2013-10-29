@@ -19,8 +19,8 @@ exports.version = '1.2.1';
 
 exports.config = function(key, value){
 	if(typeof(key) != 'string' && typeof(key) == 'object'){
-		for (var i in obj)
-			settings[i] = obj[i];
+		for (var i in key)
+			settings[i] = key[i];
 	} else if (typeof(key) == 'string' && value != null && value !='function') {
 		settings[key] = value;
 	} else {
