@@ -58,8 +58,8 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 	var panoramaRule 		= getPanoramaZoom(settings.zoom_level)
 		, currentImageNum	= 0
 		, downloaded		= 0
-		, pub 				= (settings.pub) ? '/public/' : '/' 
-		, imagePath			= global.root + pub + settings.path_to_image +'/'
+		, pub 				= (settings.pub) ? 'public/' : '' 
+		, imagePath			= homeRoot + pub + settings.path_to_image +'/'
 		, totalTiles		= (panoramaRule.x +1) * (panoramaRule.y+1);
 
 	if (typeof(tmp_dir) === 'function') {
