@@ -59,7 +59,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 		, currentImageNum	= 0
 		, downloaded		= 0
 		, pub 				= (settings.pub) ? 'public/' : '' 
-		, imagePath			= homeRoot + pub + settings.path_to_image +'/'
+		, imagePath			= homeRoot + pub + settings.path_to_image + '/'
 		, totalTiles		= (panoramaRule.x +1) * (panoramaRule.y+1);
 
 	if (typeof(tmp_dir) === 'function') {
@@ -80,7 +80,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 								+ tmpDir + '/' + settings.tiles_prefix + '*.jpg -tile '
 								+ (panoramaRule.x + 1) + 'x' + (panoramaRule.y + 1)
 								+ ' -geometry 512x512 -quality 100 '
-								+ imagePath +settings.output_prefix	+ panoId + '.jpg';
+								+ "'" + imagePath + settings.output_prefix	+ panoId + '.jpg' + "'" ;
 					ensureDir(imagePath, function(e){
 						if (err)
 							return cb(err, null);
@@ -96,7 +96,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 
 var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
 	var random		=	Math.floor(Math.random()*4)
-		, options 	=	{ host: 'cbk0.google.com'
+		, options 	=	{ host: 'cbk'+random+'.google.com'
 						, port: 80
 						, path: '/cbk?output=tile&zoom='
 						+ settings.zoom_level
