@@ -20,6 +20,11 @@ This application makes use of an onducumented Google Maps API. While you may acc
 guarantee that this API will not change in the future revisions to Google Maps.
 
 ## Changes
+* Changes in 1.2.2
+	* support for whitespaces in paths
+	* proper looping of Object type config
+	* Better path storage
+	* *** Special thanks for these contributions to thomasjonas https://github.com/thomasjonas ***
 * Changes in 1.2.1
 	* fixed an issue where the montage would try to build the montage before all tiles were downloaded
 * Changes in 1.2.0
