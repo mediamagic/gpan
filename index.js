@@ -19,8 +19,8 @@ exports.version = '1.2.1';
 
 exports.config = function(key, value){
 	if(typeof(key) != 'string' && typeof(key) == 'object'){
-		for (var i in obj)
-			settings[i] = obj[i];
+		for (var i in key)
+			settings[i] = key[i];
 	} else if (typeof(key) == 'string' && value != null && value !='function') {
 		settings[key] = value;
 	} else {
@@ -58,8 +58,8 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 	var panoramaRule 		= getPanoramaZoom(settings.zoom_level)
 		, currentImageNum	= 0
 		, downloaded		= 0
-		, pub 				= (settings.pub) ? '/public/' : '/' 
-		, imagePath			= global.root + pub + settings.path_to_image +'/'
+		, pub 				= (settings.pub) ? 'public/' : '' 
+		, imagePath			= homeRoot + pub + settings.path_to_image + '/'
 		, totalTiles		= (panoramaRule.x +1) * (panoramaRule.y+1);
 
 	if (typeof(tmp_dir) === 'function') {
@@ -80,7 +80,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 								+ tmpDir + '/' + settings.tiles_prefix + '*.jpg -tile '
 								+ (panoramaRule.x + 1) + 'x' + (panoramaRule.y + 1)
 								+ ' -geometry 512x512 -quality 100 '
-								+ imagePath +settings.output_prefix	+ panoId + '.jpg';
+								+ "'" + imagePath + settings.output_prefix	+ panoId + '.jpg' + "'" ;
 					ensureDir(imagePath, function(e){
 						if (err)
 							return cb(err, null);
@@ -96,7 +96,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 
 var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
 	var random		=	Math.floor(Math.random()*4)
-		, options 	=	{ host: 'cbk0.google.com'
+		, options 	=	{ host: 'cbk'+random+'.google.com'
 						, port: 80
 						, path: '/cbk?output=tile&zoom='
 						+ settings.zoom_level
