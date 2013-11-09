@@ -3,7 +3,7 @@
 Download high resolution Google Streetview panorama images and stitch them together into a large panorama image
 
 ## Version
-`1.2.1`
+`1.2.2`
 
 ## Installation
 
