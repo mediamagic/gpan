@@ -3,7 +3,7 @@
 Download high resolution Google Streetview panorama images and stitch them together into a large panorama image
 
 ## Version
-`1.2.2`
+`1.2.3`
 
 ## Installation
 
@@ -20,6 +20,8 @@ This application makes use of an onducumented Google Maps API. While you may acc
 guarantee that this API will not change in the future revisions to Google Maps.
 
 ## Changes
+* Changes in 1.2.3
+	* updated Google API host - thanks to okofish https://github.com/okofish 
 * Changes in 1.2.2
 	* support for whitespaces in paths
 	* proper looping of Object type config
