@@ -96,7 +96,7 @@ var _savePanorama = function(panoId, tmp_dir, cb) {
 
 var saveTile = function(panoId, x, y, imageNumber, tmpDir, cb) {
 	var random		=	Math.floor(Math.random()*4)
-		, options 	=	{ host: 'cbk'+random+'.google.com'
+		, options 	=	{ host: 'cbk'+random+'.googleapis.com'
 						, port: 80
 						, path: '/cbk?output=tile&zoom='
 						+ settings.zoom_level
